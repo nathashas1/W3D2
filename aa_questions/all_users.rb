@@ -151,6 +151,20 @@ class Question_follow
     ans
   end
 
+  def self.followed_questions_for_user_id(user_id)
+    question_follow = QuestionsDatabase.instance.execute(<<-SQL, user_id)
+      -- SELECT
+      --   *
+      -- FROM
+      --   question_follows
+      -- JOIN
+      --   users
+      -- ON
+      --   question.id = question_follow.question_id
+    SQL
+
+  end
+
   def initialize(options)
     @id = options['id']
     @question_id = options['question_id']
