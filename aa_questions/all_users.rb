@@ -92,6 +92,14 @@ class Question
     @body = options['body']
     @user_id = options['user_id']
   end
+
+  def author
+    User.find_by_id(@user_id)
+  end
+
+  def replies
+    Reply.find_by_question_id(@id)
+  end
 end
 
 class Question_follow
@@ -108,6 +116,39 @@ class Question_follow
     SQL
     return nil if question_follow.length < 1
     Question_follow.new(question_follow.first)
+  end
+
+
+  def self.followers_for_question_id(question_id)
+    question_follow = QuestionsDatabase.instance.execute(<<-SQL, question_id)
+    -- SELECT
+    --   *
+    -- FROM
+    --   question_follows
+    -- JOIN
+    -- users
+    -- ON users.id = question_follows.user_id
+    -- WHERE question_follows.question_id = ?
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        id IN (
+          SELECT
+            user_id
+          FROM
+            question_follows
+          WHERE
+            question_id = ?
+        )
+    SQL
+    ans = []
+    return nil if question_follow.length < 1
+    question_follow.each do |q|
+      ans  << User.new(q)
+    end
+    ans
   end
 
   def initialize(options)
@@ -175,6 +216,22 @@ class Reply
     @question_id = options['question_id']
     @body = options['body']
     @user_id = options['user_id']
+  end
+
+  def author
+    User.find_by_id(@user_id)
+  end
+
+  def question
+    Question.find_by_id(@question_id)
+  end
+
+  def parent_reply
+    Reply.find_by_question_id(@question_id).first
+  end
+
+  def child_replies
+    Reply.find_by_question_id(@question_id).last
   end
 end
 

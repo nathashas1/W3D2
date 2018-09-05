@@ -54,13 +54,15 @@ INSERT INTO
   users(fname,lname)
 VALUES
 ("Nathasha","Surendran"),
-("Jin", "Wu");
+("Jin", "Wu"),
+("Ronil", "Bhatia");
 
 INSERT INTO
   questions(title, body, user_id)
 VALUES
 ("Hello World", "We are the A/a student", 1),
-("Who am I?", "I am Jin the A/a student", 2);
+("Who am I?", "I am Jin the A/a student", 2),
+("Question 3?", "No one likes this question", 3);
 
 INSERT INTO
   replies(body,question_id,user_id)
@@ -68,3 +70,18 @@ VALUES
 ("Good Question", 1, 1),
 ("2nd answer", 1, 1),
 ("Bad Question", 2, 2);
+
+INSERT INTO
+  question_likes(question_id, user_id)
+VALUES
+(1, 2),
+(2, 1),
+(1, 3);
+
+
+INSERT INTO
+  question_follows(question_id, user_id)
+VALUES
+(1, 2),
+(2, 1),
+(1, 3);
